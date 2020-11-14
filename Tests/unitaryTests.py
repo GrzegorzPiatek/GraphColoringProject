@@ -19,6 +19,8 @@ def testGraphImporting():
     test_graph.importFromFile(file_name)
     print("Test graph from file \"\\Instances\\{}\"".format(file_name))
     print(test_graph.graph)
+    edgesDict = test_graph.exportEdgesDict()
+    draw.plotGraph(edgesDict)
 
 
 def plottingTest():
