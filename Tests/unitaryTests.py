@@ -6,6 +6,15 @@ def testGraphGenerator():
     saturation = 0.4
     test_graph = g.Graph(number_of_vertex, saturation)
     test_graph.generate()
-    test_graph.exportToFile("test_graph.txt")
-    print("Test graph saved to file \"test_graph.txt\"")
+    file_name = "test_graph.txt"
+    test_graph.exportToFile(file_name)
+    print("Test graph saved to file \"\\Instances\\{}\"".format(file_name))
+    print(test_graph.graph)
+
+
+def testGraphImporting():
+    test_graph = g.Graph()
+    file_name = "machowiakInstance.txt"
+    test_graph.importFromFile(file_name)
+    print("Test graph from file \"\\Instances\\{}\"".format(file_name))
     print(test_graph.graph)

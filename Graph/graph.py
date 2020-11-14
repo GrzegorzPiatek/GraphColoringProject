@@ -1,11 +1,12 @@
 import random
+from os import getcwd
 from collections import defaultdict
 import sys
 
 
 class Graph:
 
-    def __init__(self, number_of_vertex, saturation=0.5):
+    def __init__(self, number_of_vertex=0, saturation=0.5):
         self.V = number_of_vertex
         self.graph = defaultdict()
         self.saturation = saturation
@@ -40,9 +41,10 @@ class Graph:
         for key in self.graph.keys():
             self.graph[key].sort()
 
-    def exportToFile(self, filename="testgraph.txt"):
+    def exportToFile(self, file_name="testgraph.txt", file_path=getcwd()+"/Instances"):
         original_stdout = sys.stdout
-        with open(filename, 'w') as file:
+        file_place = file_path + "/" + file_name
+        with open(file_place, 'w') as file:
             sys.stdout = file
             print(self.V)
             for key in self.graph.keys():
@@ -50,10 +52,14 @@ class Graph:
                     print(str(key) + " " + str(v))
             sys.stdout = original_stdout
 
-    def importFromFile(self, filename="testgraph.txt"):
-        with open(filename, 'r') as file:
+    def importFromFile(self, file_name="testgraph.txt", file_path=getcwd()+"/Instances"):
+        file_place = file_path + "/" + file_name
+        with open(file_place, 'r') as file:
             lines = file.readlines()
-        self.V = lines[0]
+        self.V = int(lines[0])
+        for v in range(1, self.V + 1):
+            self.graph[v] = []
         for line in lines[1:]:
-            print(line)
-
+            first_vertex, second_vertex = map(int, line.split(" "))
+            self.graph[first_vertex].append(second_vertex)
+            self.graph[second_vertex].append(first_vertex)
