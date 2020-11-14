@@ -1,4 +1,5 @@
 import graph as g
+import draw
 
 
 def testGraphGenerator():
@@ -18,3 +19,10 @@ def testGraphImporting():
     test_graph.importFromFile(file_name)
     print("Test graph from file \"\\Instances\\{}\"".format(file_name))
     print(test_graph.graph)
+
+
+def plottingTest():
+    test_graph = g.Graph(8)
+    test_graph.generate(0.4)
+    edgesDict = test_graph.exportEdgesDict()
+    draw.plotGraph(edgesDict)

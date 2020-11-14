@@ -63,3 +63,16 @@ class Graph:
             first_vertex, second_vertex = map(int, line.split(" "))
             self.graph[first_vertex].append(second_vertex)
             self.graph[second_vertex].append(first_vertex)
+
+    def exportEdgesDict(self):
+        edgeDict = {'from': [], 'to': []}
+        edgesList = []
+        for v1 in self.graph.keys():
+            for v2 in self.graph[v1]:
+                edge = [v1, v2]
+                if edge not in edgesList:
+                    edgesList.append(edge)
+        for edge in edgesList:
+            edgeDict['from'].append(edge[0])
+            edgeDict['to'].append(edge[1])
+        return edgeDict
