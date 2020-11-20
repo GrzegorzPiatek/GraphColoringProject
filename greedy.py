@@ -84,15 +84,15 @@ if __name__ == '__main__':
     MapColor = GraphColoring(points)
 
     print('Coloring points:', list(points.keys()), len(points))
-    states_colored = MapColor.colorize(start_node=['a'], randomize=True, max_colors=4)
+    points_colored = MapColor.colorize(start_node=['a'], randomize=True, max_colors=4)
 
     color_groups = defaultdict(list)
-    for state in points:
-        if state in states_colored:
-            color_groups[states_colored[state]].append(state)
+    for point in points:
+        if point in points_colored:
+            color_groups[points_colored[point]].append(point)
 
     if MapColor.validate():
-        print(f'\nDone using {len(color_groups)} colors: {len(states_colored)} points')
+        print(f'\nDone using {len(color_groups)} colors: {len(points_colored)} points')
         print(color_groups)
     else:
         print('\nFailed!')
