@@ -1,8 +1,9 @@
 import graph as g
+import coloring as c
 import draw
 
 
-def testGraphGenerator():
+def graphGenerator():
     number_of_vertex = 10
     saturation = 0.4
     test_graph = g.Graph(number_of_vertex, saturation)
@@ -13,7 +14,7 @@ def testGraphGenerator():
     print(test_graph.graph)
 
 
-def testGraphImporting():
+def graphImporting():
     test_graph = g.Graph()
     file_name = "machowiakInstance.txt"
     test_graph.importFromFile(file_name)
@@ -23,8 +24,13 @@ def testGraphImporting():
     draw.plotGraph(edgesDict)
 
 
-def plottingTest():
+def plotting():
     test_graph = g.Graph(8)
     test_graph.generate(0.4)
     edgesDict = test_graph.exportEdgesDict()
     draw.plotGraph(edgesDict)
+
+
+def coloring():
+    test_graph = g.Graph(10)
+    colors = c.ColorGraph(test_graph)

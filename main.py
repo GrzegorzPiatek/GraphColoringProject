@@ -2,9 +2,10 @@ import unitaryTests as test
 
 
 def main():
-    # test.testGraphGenerator()
-    test.testGraphImporting()
-    # test.plottingTest()
+    # test.graphGenerator()
+    # test.graphImporting()
+    # test.plotting()
+    test.coloring()
 
 
 if __name__ == "__main__":
