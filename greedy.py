@@ -72,7 +72,7 @@ class GraphColoring:
                     print('Collision: ', {self.node_color[node]: (node, adj_node)})
                     return False
         return True
-
+#przykladowa implementacja
 if __name__ == '__main__':
     points = dict()
     points['a']=['b','c','d']
