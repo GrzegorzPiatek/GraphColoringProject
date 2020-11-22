@@ -32,5 +32,11 @@ def plotting():
 
 
 def coloring():
-    test_graph = g.Graph(10)
-    colors = c.ColorGraph(test_graph)
+    test_graph = g.Graph(8)     # initialize graph with 8 vertex
+    test_graph.generate()       # generate random graph
+    edgesDict = test_graph.exportEdgesDict()    # export for visualisation
+    draw.plotGraph(edgesDict)                   # draw graph
+    coloring = c.ColorGraph(test_graph)         # initialize graph coloring object which take test_graph
+    coloring.greedyColoring(showSteps=True)     # greedy coloring of taken graph
+    print("Colored vertex: ", coloring.colorOfVertex)
+    print("Number of colors: ", coloring.numberOfUsedColor)
