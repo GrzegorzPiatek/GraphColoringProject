@@ -49,7 +49,8 @@ class Graph:
             print(self.V)
             for key in self.graph.keys():
                 for v in self.graph[key]:
-                    print(str(key) + " " + str(v))
+                    if v > key:
+                        print(str(key) + " " + str(v))
             sys.stdout = original_stdout
 
     def importFromFile(self, file_name="testgraph.txt", file_path=getcwd()+"/Instances"):

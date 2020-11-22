@@ -6,7 +6,7 @@ import draw
 def graphGenerator():
     number_of_vertex = 10
     saturation = 0.4
-    test_graph = g.Graph(number_of_vertex, saturation)
+    test_graph = g.Graph(number_of_vertex, saturation )
     test_graph.generate()
     file_name = "test_graph.txt"
     test_graph.exportToFile(file_name)

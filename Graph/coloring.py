@@ -1,18 +1,18 @@
 from graph import Graph as g
 
 
-class ColorGraph:
+class ColorGraph(g):
 
     def __init__(self, graph: g):
         self.graph = graph
-        self.colors = [str(x + 1) for x in range(graph.V)]
+        self.colors = [str(x) for x in self.graph.graph.keys()]
         self.colorOfVertex = {}
-        self.colorOfVertex = {x: None for x in graph.graph.keys()}
+        self.colorOfVertex = {x: None for x in self.graph.graph.keys()}
         self.numberOfUsedColor = 0
         self.usedColors = []
 
     def greedyColoring(self, showSteps=False):
-        notColoredVertex = [v for v in range(1, self.graph.V + 1)]
+        notColoredVertex = [v for v in self.graph.graph.keys()]
 
         if showSteps: print("Colors", self.colors)
 
