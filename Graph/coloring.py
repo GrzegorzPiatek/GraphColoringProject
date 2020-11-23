@@ -1,7 +1,7 @@
 from graph import Graph as g
 
 
-class ColorGraph(g):
+class ColorGraph:
 
     def __init__(self, graph: g):
         self.graph = graph

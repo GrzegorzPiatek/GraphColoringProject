@@ -25,15 +25,15 @@ def graphImporting():
 
 
 def plotting():
-    test_graph = g.Graph(8)
-    test_graph.generate(0.4)
+    test_graph = g.Graph(10)
+    test_graph.generate(0.5)
     edgesDict = test_graph.exportEdgesDict()
     draw.plotGraph(edgesDict)
 
 
 def coloring():
-    test_graph = g.Graph(8)     # initialize graph with 8 vertex
-    test_graph.generate()       # generate random graph
+    test_graph = g.Graph(50)     # initialize graph with 8 vertex
+    test_graph.generate(0.2)       # generate random graph
     edgesDict = test_graph.exportEdgesDict()    # export for visualisation
     draw.plotGraph(edgesDict)                   # draw graph
     coloring = c.ColorGraph(test_graph)         # initialize graph coloring object which take test_graph
