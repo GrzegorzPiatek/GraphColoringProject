@@ -26,14 +26,14 @@ def graphImporting():
 
 
 def plotting():
-    test_graph = g.Graph(10)
-    test_graph.generate(0.5)
+    test_graph = g.Graph(8)
+    test_graph.generate(0.4)
     edgesDict = test_graph.exportEdgesDict()
     draw.plotGraph(edgesDict)
 
 
 def coloring():
-    test_graph = g.Graph(50)  # initialize graph with 8 vertex
+    test_graph = g.Graph(10)  # initialize graph with 8 vertex
     test_graph.generate(0.2)  # generate random graph
     edgesDict = test_graph.exportEdgesDict()  # export for visualisation
     draw.plotGraph(edgesDict)  # draw graph
@@ -86,6 +86,45 @@ def graphLE450Greedy():
     coloring = c.ColorGraph(test_graph)
     coloring.greedyColoring(showSteps=False)
     print(file_name, "Number of colors: ", coloring.numberOfUsedColor)
+
+
+def firstTabu():
+    test_graph = g.Graph()
+    file_name = "test_graph.txt"
+    test_graph.importFromFile(file_name)
+    edgesDict = test_graph.exportEdgesDict()
+    draw.plotGraph(edgesDict)
+    print("Graph: ", test_graph.graph)
+    coloring = c.ColorGraph(test_graph)
+    coloring.tabuSearchColoring()
+    print(file_name, "Number of colors: ", coloring.numberOfUsedColor)
+    print(file_name, "Number of colors: ", coloring.colorOfVertex)
+
+
+def machowiakGreedy():
+    test_graph = g.Graph()
+    file_name = "gc500.txt"
+    test_graph.importFromFile(file_name)
+    # edgesDict = test_graph.exportEdgesDict()
+    # draw.plotGraph(edgesDict)
+    # print("Graph: ", test_graph.graph)
+    coloring = c.ColorGraph(test_graph)
+    coloring.greedyColoring()
+    print(file_name, "Number of colors: ", coloring.numberOfUsedColor)
+    print(file_name, "Number of colors: ", coloring.colorOfVertex)
+
+
+def machowiakTabu():
+    test_graph = g.Graph()
+    file_name = "gc500.txt"
+    test_graph.importFromFile(file_name)
+    # edgesDict = test_graph.exportEdgesDict()
+    # draw.plotGraph(edgesDict)
+    # print("Graph: ", test_graph.graph)
+    coloring = c.ColorGraph(test_graph)
+    coloring.tabuSearchColoring()
+    print(file_name, "Number of colors: ", coloring.numberOfUsedColor)
+    print(file_name, "Number of colors: ", coloring.colorOfVertex)
 # def timerTesting():
 #     start = time.perf_counter()
 #
