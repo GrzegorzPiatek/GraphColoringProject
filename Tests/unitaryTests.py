@@ -122,7 +122,7 @@ def machowiakTabu():
     # draw.plotGraph(edgesDict)
     # print("Graph: ", test_graph.graph)
     coloring = c.ColorGraph(test_graph)
-    coloring.tabuSearchColoring()
+    coloring.greedyImproved()
     print(file_name, "Number of colors: ", coloring.numberOfUsedColor)
     print(file_name, "Number of colors: ", coloring.colorOfVertex)
 # def timerTesting():

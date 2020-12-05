@@ -2,6 +2,7 @@ import pandas as pd
 import networkx as nx
 import matplotlib.pyplot as plt
 
+
 def plotGraph(edges_dict):
     # Build a dataframe with your connections
     df = pd.DataFrame(edges_dict)
