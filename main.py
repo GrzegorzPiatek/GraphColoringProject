@@ -13,8 +13,8 @@ def main():
     # test.graphLE450Greedy()
     # test.firstTabu()
 
-    test.machowiakGreedy()
-    test.machowiakTabu()
+    # test.machowiakGreedy()
+    # test.machowiakTabu()
 
 if __name__ == "__main__":
     main()

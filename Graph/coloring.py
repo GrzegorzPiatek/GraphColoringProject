@@ -12,6 +12,20 @@ class ColorGraph:
         self.numberOfUsedColor = 0
         self.usedColors = []
 
+    def colorVertex(self, notColoredVertex):
+        availableColors = [color for color in self.colors]
+        vertexConnectedWithNCV = [v for v in self.graph.graph[notColoredVertex]]
+
+        for vConnect in vertexConnectedWithNCV:
+            if self.colorOfVertex[vConnect] and self.colorOfVertex[vConnect] in availableColors:
+                availableColors.remove(self.colorOfVertex[vConnect])
+
+        self.colorOfVertex[notColoredVertex] = availableColors[0]
+
+        if self.colorOfVertex[notColoredVertex] not in self.usedColors:
+            self.usedColors.append(self.colorOfVertex[notColoredVertex])
+            self.numberOfUsedColor += 1
+
     def greedyColoring(self, showSteps=False):
         notColoredVertex = [v for v in self.graph.graph.keys()]
 
@@ -19,21 +33,10 @@ class ColorGraph:
 
         for ncv in notColoredVertex:
             if showSteps: print("Color of vertex ", self.colorOfVertex)
+            self.colorVertex(ncv)
 
-            availableColors = [color for color in self.colors]
-            vertexConnectedWithNCV = [v for v in self.graph.graph[ncv]]
-
-            for vConnect in vertexConnectedWithNCV:
-                if self.colorOfVertex[vConnect] and self.colorOfVertex[vConnect] in availableColors:
-                    if showSteps: print("Removed color", self.colorOfVertex[vConnect])
-                    availableColors.remove(self.colorOfVertex[vConnect])
-
-            self.colorOfVertex[ncv] = availableColors[0]
-
-            if self.colorOfVertex[ncv] not in self.usedColors:
-                self.usedColors.append(self.colorOfVertex[ncv])
-                self.numberOfUsedColor += 1
         if showSteps: print("Color of vertex ", self.colorOfVertex)
+        self.colorVertex(ncv)
 
     def tabuSearchColoring(self, searchingTime=10):
         # start_timer = time.perf_counter()
