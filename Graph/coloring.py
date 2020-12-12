@@ -142,5 +142,11 @@ class ColorGraph:
             self.colorOfVertex = newSolution
             currentIteration += 1
 
+    def countColors(self):
+        for k, c in self.colorOfVertex.items():
+            if c not in self.usedColors:
+                self.usedColors.append(c)
+                self.numberOfUsedColor += 1
+
 
 
