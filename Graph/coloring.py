@@ -1,7 +1,7 @@
 from graph import Graph as g
 import random
 import math
-from collections import deque
+import copy
 
 
 class ColorGraph:
@@ -12,7 +12,7 @@ class ColorGraph:
         self.colorOfVertex = {x: None for x in self.graph.graph.keys()}
         self.numberOfUsedColor = 0
         self.usedColors = []
-        self.TABU = deque()
+        self.TABU = []
         self.sizeOfTABU = 7
 
     def colorVertex(self, notColoredVertex):
@@ -25,9 +25,12 @@ class ColorGraph:
 
         self.colorOfVertex[notColoredVertex] = availableColors[0]
 
-        if self.colorOfVertex[notColoredVertex] not in self.usedColors:
-            self.usedColors.append(self.colorOfVertex[notColoredVertex])
+        if int(self.colorOfVertex[notColoredVertex]) > len(self.usedColors):
+            self.usedColors.append(1)
             self.numberOfUsedColor += 1
+        else:
+            self.usedColors[int(self.colorOfVertex[notColoredVertex])-1] += 1
+
 
     def greedyColoring(self, showSteps=False):
         notColoredVertex = [v for v in self.graph.graph.keys()]
@@ -37,8 +40,16 @@ class ColorGraph:
         for ncv in notColoredVertex:
             if showSteps: print("Color of vertex ", self.colorOfVertex)
             self.colorVertex(ncv)
-
+        if showSteps: print("used colors ", self.usedColors)
         if showSteps: print("Color of vertex ", self.colorOfVertex)
+
+        self.numberOfUsedColor = 0
+        self.colors = []
+        for k, c in self.colorOfVertex.items():
+            if c not in self.colors:
+                self.colors.append(c)
+                self.numberOfUsedColor += 1
+
 
     def greedyImproved(self, searchingTime=10):
 
@@ -82,70 +93,112 @@ class ColorGraph:
         self.colors = [str(color) for color in range(0, nCol)]
         self.colorOfVertex = {v: self.colors[random.randrange(0, nCol)] for v in self.graph.graph.keys()}
 
-    def reloadTabu(self, bannedMove):
-        if len(self.TABU) < self.sizeOfTABU:
-            self.TABU.append(bannedMove)
-        else:
-            self.TABU.remove(self.TABU[0])
-            self.TABU.append(bannedMove)
 
-    def tabuColoring(self, maxIterations=2000, singleIterations=50):
+    def tabuColoring(self, maxIterations, singleIterations, debug=False):
+        self.greedyColoring()
+        bestColor = str(len(self.usedColors))
 
-        self.randomColoring()
-        currentIteration = 0
-        numberOfConflicts = 0
-        candidates = []
-        aspirationOfSolution = {}
+        for maxI in range(maxIterations):
+            if debug: print("ITERACJA maxI= ", maxI)
+            # vertex = None
+            conflicts = set()
+            candidateColor = bestColor
+            for v, vCol in self.colorOfVertex.items():
+                if debug: print("v, vCol", v, ", ", vCol)
+                if vCol == bestColor:
+                    conflicts.add(v)
+                    break
+
+            newColorOfVertex = copy.deepcopy(self.colorOfVertex)
+            # conflicts = set()
+            # conflicts.add(vertex)
+
+            currentIteration = 0
+            while conflicts and currentIteration < singleIterations:
+                self.TABU = []
+                if debug: print("newColorOfVertex= ", newColorOfVertex)
+                if debug: print("conflicts= ", conflicts)
+
+                if debug: print("bestColor= ", bestColor)
+                if debug: print("self.TABU= ", self.TABU)
+
+                vertex = conflicts.pop()
+                if debug: print("vertex= ", vertex)
+
+                vertexNeighboors = self.graph.graph[vertex]
+
+                availableColors = [color for color in self.colors]
+                availableColors.remove(bestColor)
+                bannedColors = set()
+                bannedColors.add(bestColor)
+
+                for neighboor in vertexNeighboors:
+                    if newColorOfVertex[neighboor] in availableColors:
+                        availableColors.remove(newColorOfVertex[neighboor])
+                        if neighboor in self.TABU:
+                            bannedColors.add(newColorOfVertex[neighboor])
+                if debug: print("availableColors= ", availableColors)
+                if len(availableColors) > 0:
+                    candidateColor = availableColors[0]
+                else:
+                    neighboorColors = []
+                    colorsWeights = []
+                    for neighboor in vertexNeighboors:
+                        if newColorOfVertex[neighboor] not in neighboorColors and newColorOfVertex[neighboor] not in bannedColors:
+                            neighboorColors.append(newColorOfVertex[neighboor])
+                            colorsWeights.append(1)
+                        elif newColorOfVertex[neighboor] not in bannedColors:
+                            index = neighboorColors.index(newColorOfVertex[neighboor])
+                            colorsWeights[index] += 1
+
+                        if len(neighboorColors) > 0:
+                            candidateColor = neighboorColors[colorsWeights.index(min(colorsWeights))]
+                        else:
+                            break
+                    if debug: print("candidateColor= ", candidateColor)
+                    if debug: print("vertexNeighboors= ", vertexNeighboors)
+
+                    for neighboor in vertexNeighboors:
+                        if newColorOfVertex[neighboor] == candidateColor:
+                            conflicts.add(neighboor)
+
+                newColorOfVertex[vertex] = candidateColor
+                if len(self.TABU) < self.sizeOfTABU:
+                    self.TABU.append(vertex)
+                else:
+                    self.TABU.pop(0)
+                    self.TABU.append(vertex)
+                if debug: print("\n newColorOfVertex= ", newColorOfVertex)
+                if debug: print("\n\n")
 
 
-        while currentIteration < maxIterations:
+                currentIteration += 1
 
-            for vertex in self.graph.graph.keys():
-                for vertexConnected in self.graph.graph[vertex]:
-                    if self.colorOfVertex[vertex] == self.colorOfVertex[vertexConnected]:
-                        numberOfConflicts += 1
-                        if vertexConnected not in candidates:
-                            candidates.append(vertexConnected)
-                        if vertex not in candidates:
-                            candidates.append(vertex)
 
-            if numberOfConflicts == 0: break
-            vertex = None
-            newSolution = {}
-            for tryImprove in range(singleIterations):
-                vertex = candidates[random.randrange(0, len(candidates))]
-                newColor = self.colors[random.randrange(1, len(self.colors))]
-                if self.colorOfVertex[vertex] == newColor:
-                    newColor = self.colors[0]
+            if debug: print("conflicts= ", conflicts)
 
-                newSolution = self.colorOfVertex.copy()
-                newConflicts = 0
-                for vertex in self.graph.graph.keys():
-                    for vertexConnected in self.graph.graph[vertex]:
-                        if self.colorOfVertex[vertex] == self.colorOfVertex[vertexConnected]:
-                            newConflicts += 1
+            if len(conflicts) == 0:
+                self.colorOfVertex = copy.deepcopy(newColorOfVertex)
+                self.usedColors[int(bestColor)-1] -= 1
 
-                if newConflicts < numberOfConflicts:
-                    if newConflicts <= aspirationOfSolution.setdefault(numberOfConflicts, numberOfConflicts -1):
-                        aspirationOfSolution[numberOfConflicts] = newConflicts - 1
+            if debug: print("self.usedColors ", self.usedColors)
+            if debug: print("int(bestColor)-1 ", int(bestColor)-1)
 
-                        if (vertex, newColor) in self.TABU:
-                            self.TABU.remove((vertex, newColor))
-                        break
+            if self.usedColors[int(bestColor)-1] == 0:
+                curMin = self.usedColors[0]
+                for colorWeight in self.usedColors:
+                    if curMin > colorWeight > 0:
+                        curMin = colorWeight
+                bestColor = str(self.usedColors.index(curMin)+1)
+                if debug: print("NEW bestColor= ", bestColor)
 
-                    else:
-                        if (vertex, newColor) in self.TABU:
-                            continue
-            self.TABU.append((vertex, self.colorOfVertex[vertex]))
-            if len(self.TABU) > self.sizeOfTABU:
-                self.TABU.popleft()
-            self.colorOfVertex = newSolution
-            currentIteration += 1
 
     def countColors(self):
+        colors = []
+        self.numberOfUsedColor = 0
         for k, c in self.colorOfVertex.items():
-            if c not in self.usedColors:
-                self.usedColors.append(c)
+            if c not in colors:
+                colors.append(c)
                 self.numberOfUsedColor += 1
 
 

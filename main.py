@@ -9,15 +9,17 @@ def main():
     # test.graphQueenGreedy()
     # test.graphGC100Greedy()
     # test.graphMilesGreedy()
-    test.graphGC500Greedy()
+    # test.graphGC500Greedy()
     # test.graphLE450Greedy()
-    test.greedyImproved()
+    # test.greedyImproved()
 
     # test.machowiakGreedy()
-    # test.machowiakTabu()
+    # test.gc500Tabu()
+    test.gc1000Tabu()
     # test.queenTabu()
     # test.miles250Tabu()
     # test.le450Tabu()
+    # test.testTabu()
 
 
 if __name__ == "__main__":

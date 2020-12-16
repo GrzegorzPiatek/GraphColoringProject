@@ -27,14 +27,14 @@ def graphImporting():
 
 def plotting():
     test_graph = g.Graph(8)
-    test_graph.generate(0.4)
+    test_graph.generate()
     edgesDict = test_graph.exportEdgesDict()
     draw.plotGraph(edgesDict)
 
 
 def coloring():
-    test_graph = g.Graph(10)  # initialize graph with 8 vertex
-    test_graph.generate(0.2)  # generate random graph
+    test_graph = g.Graph(15, 0.30)  # initialize graph with 8 vertex
+    test_graph.generate()  # generate random graph
     edgesDict = test_graph.exportEdgesDict()  # export for visualisation
     draw.plotGraph(edgesDict)  # draw graph
     coloring = c.ColorGraph(test_graph)  # initialize graph coloring object which take test_graph
@@ -77,7 +77,7 @@ def graphGC500Greedy():
     coloring = c.ColorGraph(test_graph)
     coloring.greedyColoring(showSteps=False)
     print(file_name, "Number of colors: ", coloring.numberOfUsedColor)
-
+    print(file_name, "Colors ", coloring.colorOfVertex)
 
 def graphLE450Greedy():
     test_graph = g.Graph()
@@ -103,62 +103,75 @@ def machowiakGreedy():
     test_graph = g.Graph()
     file_name = "machowiakInstance.txt"
     test_graph.importFromFile(file_name)
-    # edgesDict = test_graph.exportEdgesDict()
-    # draw.plotGraph(edgesDict)
-    # print("Graph: ", test_graph.graph)
+    edgesDict = test_graph.exportEdgesDict()
+    draw.plotGraph(edgesDict)
+    print("Graph: ", test_graph.graph)
     coloring = c.ColorGraph(test_graph)
     coloring.greedyColoring()
     print(file_name, "Number of colors: ", coloring.numberOfUsedColor)
     print(file_name, "Number of colors: ", coloring.colorOfVertex)
 
 
-def machowiakTabu():
+
+def testTabu():
     test_graph = g.Graph()
-    file_name = "machowiakInstance.txt"
+    file_name = "greedy5tabu4.txt"
     test_graph.importFromFile(file_name)
-    # edgesDict = test_graph.exportEdgesDict()
-    # draw.plotGraph(edgesDict)
-    # print("Graph: ", test_graph.graph)
+    #draw.plotGraph(test_graph.exportEdgesDict())
+    print("Graph: ", test_graph.graph)
     coloring = c.ColorGraph(test_graph)
-    coloring.tabuColoring()
+    coloring.tabuColoring(maxIterations=40, singleIterations=50, debug=True)
+    coloring.countColors()
     print(file_name, "Number of colors: ", coloring.numberOfUsedColor)
     print(file_name, "Number of colors: ", coloring.colorOfVertex)
-# def timerTesting():
-#     start = time.perf_counter()
-#
-#     stop = time.perf_counter()
-#     print(f"Time of coloring for {n} random graph: {stop - start:0.4f} seconds")
-
 
 
 def queenTabu():
     test_graph = g.Graph()
     file_name = "queen6.txt"
     test_graph.importFromFile(file_name)
+    #draw.plotGraph(test_graph.exportEdgesDict())
+    print("Graph: ", test_graph.graph)
     coloring = c.ColorGraph(test_graph)
-    coloring.tabuColoring(maxIterations=100, singleIterations=20)
+    coloring.tabuColoring(maxIterations=60, singleIterations=50, debug=False)
     coloring.countColors()
     print(file_name, "Number of colors: ", coloring.numberOfUsedColor)
-    print(file_name, "colors: ", coloring.colorOfVertex)
+    print(file_name, "Number of colors: ", coloring.colorOfVertex)
 
 
-def miles250Tabu():
+def gc500Tabu():
     test_graph = g.Graph()
-    file_name = "miles250.txt"
+    file_name = "gc500.txt"
     test_graph.importFromFile(file_name)
+    #draw.plotGraph(test_graph.exportEdgesDict())
+    print("Graph: ", test_graph.graph)
     coloring = c.ColorGraph(test_graph)
-    coloring.tabuColoring(maxIterations=500, singleIterations=50)
+    coloring.tabuColoring(maxIterations=80, singleIterations=10, debug=False)
     coloring.countColors()
     print(file_name, "Number of colors: ", coloring.numberOfUsedColor)
-    print(file_name, "colors: ", coloring.colorOfVertex)
+    print(file_name, "Colors: ", coloring.colorOfVertex)
+
+
+def gc1000Tabu():
+    test_graph = g.Graph()
+    file_name = "gc1000_300013.txt"
+    test_graph.importFromFile(file_name)
+    #draw.plotGraph(test_graph.exportEdgesDict())
+    coloring = c.ColorGraph(test_graph)
+    coloring.tabuColoring(maxIterations=200, singleIterations=200, debug=False)
+    coloring.countColors()
+    print(file_name, "Number of colors: ", coloring.numberOfUsedColor)
+    print(file_name, "Colors: ", coloring.colorOfVertex)
 
 
 def le450Tabu():
     test_graph = g.Graph()
     file_name = "le450_5a.txt"
     test_graph.importFromFile(file_name)
+    #draw.plotGraph(test_graph.exportEdgesDict())
+    print("Graph: ", test_graph.graph)
     coloring = c.ColorGraph(test_graph)
-    coloring.tabuColoring(maxIterations=2000, singleIterations=20)
+    coloring.tabuColoring(maxIterations=80, singleIterations=80, debug=False)
     coloring.countColors()
     print(file_name, "Number of colors: ", coloring.numberOfUsedColor)
-    print(file_name, "colors: ", coloring.colorOfVertex)
+    print(file_name, "Number of colors: ", coloring.colorOfVertex)

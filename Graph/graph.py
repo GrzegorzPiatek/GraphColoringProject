@@ -6,7 +6,7 @@ import sys
 
 class Graph:
 
-    def __init__(self, number_of_vertex=0, saturation=0.5):
+    def __init__(self, number_of_vertex=0, saturation=0.3):
         self.V = number_of_vertex
         self.graph = defaultdict()
         self.saturation = saturation
@@ -14,7 +14,7 @@ class Graph:
         number_of_all_possible_connections = (self.V * (self.V - 1)) / 2
         self.number_of_connections = int(saturation * number_of_all_possible_connections)
 
-    def generate(self, saturation=0.5):
+    def generate(self):
         not_connected_vertices = [x for x in range(1, self.V + 1)]
         for v in range(1, self.V + 1):
             self.graph[v] = []
