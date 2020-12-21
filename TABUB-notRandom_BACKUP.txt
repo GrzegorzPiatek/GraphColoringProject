@@ -1,0 +1,106 @@
+    def tabuColoring(self, maxIterations, singleIterations, debug=False):
+        self.greedyColoring()
+        # colorsTABU = set()
+        # singleColorTry = self.usedColors[0]
+        bestColor = "1"
+        for maxI in range(maxIterations):
+
+            # curMin = self.usedColors[0]
+            # for colorWeight in self.usedColors:
+            #     if curMin > colorWeight > 0:
+            #         curMin = colorWeight
+            #
+            # if bestColor == str(self.usedColors.index(curMin)+1):
+            #     if singleColorTry > 1:
+            #         singleColorTry -= 1
+            #     else:
+            #         colorsTABU.add(bestColor)
+            # else:
+            #     bestColor = str(self.usedColors.index(curMin) + 1)
+            #     singleColorTry = curMin
+            bestColor = str(random.randint(1, len(self.usedColors)))
+
+
+
+            if debug: print("NEW bestColor= ", bestColor)
+            if debug: print("ITERACJA maxI= ", maxI)
+
+            conflicts = set()
+            candidateColor = bestColor
+            for v, vCol in self.colorOfVertex.items():
+                if debug: print("v, vCol", v, ", ", vCol)
+                if vCol == bestColor:
+                    conflicts.add(v)
+
+            newColorOfVertex = copy.deepcopy(self.colorOfVertex)
+
+            currentIteration = 0
+            while conflicts and currentIteration < singleIterations:
+                self.TABU = []
+                if debug: print("newColorOfVertex= ", newColorOfVertex)
+                if debug: print("conflicts= ", conflicts)
+
+                if debug: print("bestColor= ", bestColor)
+                if debug: print("self.TABU= ", self.TABU)
+
+                vertex = conflicts.pop()
+                if debug: print("vertex= ", vertex)
+
+                vertexNeighboors = self.graph.graph[vertex]
+
+                availableColors = [color for color in self.colors if self.usedColors[int(color)-1] > 0]
+                availableColors.remove(bestColor)
+                bannedColors = set()
+                bannedColors.add(bestColor)
+
+                for neighboor in vertexNeighboors:
+                    if newColorOfVertex[neighboor] in availableColors:
+                        availableColors.remove(newColorOfVertex[neighboor])
+                        if neighboor in self.TABU:
+                            bannedColors.add(newColorOfVertex[neighboor])
+                if debug: print("availableColors= ", availableColors)
+                if len(availableColors) > 0:
+                    candidateColor = availableColors[0]
+                else:
+                    neighboorColors = []
+                    colorsWeights = []
+                    for neighboor in vertexNeighboors:
+                        if newColorOfVertex[neighboor] not in neighboorColors and newColorOfVertex[neighboor] not in bannedColors:
+                            neighboorColors.append(newColorOfVertex[neighboor])
+                            colorsWeights.append(1)
+                        elif newColorOfVertex[neighboor] not in bannedColors:
+                            index = neighboorColors.index(newColorOfVertex[neighboor])
+                            colorsWeights[index] += 1
+
+                        if len(neighboorColors) > 0:
+                            candidateColor = neighboorColors[colorsWeights.index(min(colorsWeights))]
+                        else:
+                            break
+                    if debug: print("candidateColor= ", candidateColor)
+                    if debug: print("vertexNeighboors= ", vertexNeighboors)
+
+                    for neighboor in vertexNeighboors:
+                        if newColorOfVertex[neighboor] == candidateColor:
+                            conflicts.add(neighboor)
+
+                newColorOfVertex[vertex] = candidateColor
+                if len(self.TABU) < self.sizeOfTABU:
+                    self.TABU.append(vertex)
+                else:
+                    self.TABU.pop(0)
+                    self.TABU.append(vertex)
+                if debug: print("\n newColorOfVertex= ", newColorOfVertex)
+
+                currentIteration += 1
+
+            if debug: print("conflicts= ", conflicts)
+
+            if len(conflicts) == 0:
+                if debug: print("# conflicts= 0,  usedColors(bestColor)", self.usedColors[int(bestColor)-1])
+                self.colorOfVertex = copy.deepcopy(newColorOfVertex)
+                self.usedColors[int(bestColor)-1] -= 1
+
+            if debug: print("self.usedColors ", self.usedColors)
+            if debug: print("int(bestColor)-1 ", int(bestColor)-1)
+
+            if debug: print("\n\n")

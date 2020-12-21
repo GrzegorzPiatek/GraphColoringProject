@@ -96,22 +96,22 @@ class ColorGraph:
 
     def tabuColoring(self, maxIterations, singleIterations, debug=False):
         self.greedyColoring()
-        bestColor = str(len(self.usedColors))
 
         for maxI in range(maxIterations):
+
+            bestColor = str(random.randint(1, len(self.usedColors)))
+
+            if debug: print("NEW bestColor= ", bestColor)
             if debug: print("ITERACJA maxI= ", maxI)
-            # vertex = None
+
             conflicts = set()
             candidateColor = bestColor
             for v, vCol in self.colorOfVertex.items():
                 if debug: print("v, vCol", v, ", ", vCol)
                 if vCol == bestColor:
                     conflicts.add(v)
-                    break
 
             newColorOfVertex = copy.deepcopy(self.colorOfVertex)
-            # conflicts = set()
-            # conflicts.add(vertex)
 
             currentIteration = 0
             while conflicts and currentIteration < singleIterations:
@@ -127,7 +127,7 @@ class ColorGraph:
 
                 vertexNeighboors = self.graph.graph[vertex]
 
-                availableColors = [color for color in self.colors]
+                availableColors = [color for color in self.colors if self.usedColors[int(color)-1] > 0]
                 availableColors.remove(bestColor)
                 bannedColors = set()
                 bannedColors.add(bestColor)
@@ -169,29 +169,20 @@ class ColorGraph:
                     self.TABU.pop(0)
                     self.TABU.append(vertex)
                 if debug: print("\n newColorOfVertex= ", newColorOfVertex)
-                if debug: print("\n\n")
-
 
                 currentIteration += 1
-
 
             if debug: print("conflicts= ", conflicts)
 
             if len(conflicts) == 0:
+                if debug: print("# conflicts= 0,  usedColors(bestColor)", self.usedColors[int(bestColor)-1])
                 self.colorOfVertex = copy.deepcopy(newColorOfVertex)
                 self.usedColors[int(bestColor)-1] -= 1
 
             if debug: print("self.usedColors ", self.usedColors)
             if debug: print("int(bestColor)-1 ", int(bestColor)-1)
 
-            if self.usedColors[int(bestColor)-1] == 0:
-                curMin = self.usedColors[0]
-                for colorWeight in self.usedColors:
-                    if curMin > colorWeight > 0:
-                        curMin = colorWeight
-                bestColor = str(self.usedColors.index(curMin)+1)
-                if debug: print("NEW bestColor= ", bestColor)
-
+            if debug: print("\n\n")
 
     def countColors(self):
         colors = []
