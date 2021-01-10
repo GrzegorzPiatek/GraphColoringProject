@@ -29,8 +29,7 @@ class ColorGraph:
             self.usedColors.append(1)
             self.numberOfUsedColor += 1
         else:
-            self.usedColors[int(self.colorOfVertex[notColoredVertex])-1] += 1
-
+            self.usedColors[int(self.colorOfVertex[notColoredVertex]) - 1] += 1
 
     def greedyColoring(self, showSteps=False):
         notColoredVertex = [v for v in self.graph.graph.keys()]
@@ -50,8 +49,7 @@ class ColorGraph:
                 self.colors.append(c)
                 self.numberOfUsedColor += 1
 
-
-    def greedyImproved(self, searchingTime=10):
+    def greedyImproved(self):
 
         TAB = []
         currentV = 1
@@ -60,43 +58,47 @@ class ColorGraph:
             neighbours = []
             if not self.colorOfVertex[currentV]: neighbours = [[currentV, len(self.graph.graph[currentV])]]
             for connectedWithCurrentV in self.graph.graph[currentV]:
-                if not self.colorOfVertex[connectedWithCurrentV]: neighbours.append([connectedWithCurrentV, len(self.graph.graph[connectedWithCurrentV])])
+                if not self.colorOfVertex[connectedWithCurrentV]: neighbours.append(
+                    [connectedWithCurrentV, len(self.graph.graph[connectedWithCurrentV])])
             if not neighbours:
                 currentV = TAB.pop(0)
                 continue
             neighbours = sorted(neighbours, key=lambda s: s[1], reverse=True)
-            # print("Neighbours: ", neighbours)
             indexOfBest = 0
             bestV = neighbours[indexOfBest][0]
             while bestV in TAB:
                 indexOfBest += 1
                 bestV = neighbours[indexOfBest][0]
             TAB.append(bestV)
-            # print("TAB:  ", TAB)
-            # print("BestV: ", bestV)
             availableColors = [color for color in self.colors]
             vertexConnectedWithBest = [v for v in self.graph.graph[bestV]]
-            # print("connected with Best: ", vertexConnectedWithBest)
             for vConnect in vertexConnectedWithBest:
                 if self.colorOfVertex[vConnect] and self.colorOfVertex[vConnect] in availableColors:
                     availableColors.remove(self.colorOfVertex[vConnect])
             self.colorOfVertex[bestV] = availableColors[0]
-            if self.colorOfVertex[bestV] not in self.usedColors:
-                self.usedColors.append(self.colorOfVertex[bestV])
+            if int(self.colorOfVertex[bestV]) > len(self.usedColors):
+                self.usedColors.append(1)
                 self.numberOfUsedColor += 1
+            else:
+                self.usedColors[int(self.colorOfVertex[bestV]) - 1] += 1
             currentV = bestV
-            neighbours = []
             numberToColor -= 1
+
+        self.numberOfUsedColor = 0
+        self.colors = []
+        for k, c in self.colorOfVertex.items():
+            if c not in self.colors:
+                self.colors.append(c)
+                self.numberOfUsedColor += 1
 
     def randomColoring(self):
         nCol = int(math.log(self.graph.V, 2)) * int(math.log(self.graph.V, 10))
         self.colors = [str(color) for color in range(0, nCol)]
         self.colorOfVertex = {v: self.colors[random.randrange(0, nCol)] for v in self.graph.graph.keys()}
 
-
     def tabuColoring(self, maxIterations, singleIterations, debug=False):
-        self.greedyColoring()
-
+        self.greedyImproved()
+        # self.greedyColoring()
         for maxI in range(maxIterations):
 
             bestColor = str(random.randint(1, len(self.usedColors)))
@@ -114,8 +116,9 @@ class ColorGraph:
             newColorOfVertex = copy.deepcopy(self.colorOfVertex)
 
             currentIteration = 0
+            self.TABU = []
             while conflicts and currentIteration < singleIterations:
-                self.TABU = []
+
                 if debug: print("newColorOfVertex= ", newColorOfVertex)
                 if debug: print("conflicts= ", conflicts)
 
@@ -127,7 +130,7 @@ class ColorGraph:
 
                 vertexNeighboors = self.graph.graph[vertex]
 
-                availableColors = [color for color in self.colors if self.usedColors[int(color)-1] > 0]
+                availableColors = [color for color in self.colors if self.usedColors[int(color) - 1] > 0]
                 availableColors.remove(bestColor)
                 bannedColors = set()
                 bannedColors.add(bestColor)
@@ -144,7 +147,8 @@ class ColorGraph:
                     neighboorColors = []
                     colorsWeights = []
                     for neighboor in vertexNeighboors:
-                        if newColorOfVertex[neighboor] not in neighboorColors and newColorOfVertex[neighboor] not in bannedColors:
+                        if newColorOfVertex[neighboor] not in neighboorColors and newColorOfVertex[
+                            neighboor] not in bannedColors:
                             neighboorColors.append(newColorOfVertex[neighboor])
                             colorsWeights.append(1)
                         elif newColorOfVertex[neighboor] not in bannedColors:
@@ -175,12 +179,12 @@ class ColorGraph:
             if debug: print("conflicts= ", conflicts)
 
             if len(conflicts) == 0:
-                if debug: print("# conflicts= 0,  usedColors(bestColor)", self.usedColors[int(bestColor)-1])
+                if debug: print("# conflicts= 0,  usedColors(bestColor)", self.usedColors[int(bestColor) - 1])
                 self.colorOfVertex = copy.deepcopy(newColorOfVertex)
-                self.usedColors[int(bestColor)-1] -= 1
+                self.usedColors[int(bestColor) - 1] -= 1
 
             if debug: print("self.usedColors ", self.usedColors)
-            if debug: print("int(bestColor)-1 ", int(bestColor)-1)
+            if debug: print("int(bestColor)-1 ", int(bestColor) - 1)
 
             if debug: print("\n\n")
 
@@ -191,6 +195,3 @@ class ColorGraph:
             if c not in colors:
                 colors.append(c)
                 self.numberOfUsedColor += 1
-
-
-

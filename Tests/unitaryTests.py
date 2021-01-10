@@ -5,7 +5,7 @@ import time
 
 
 def graphGenerator():
-    number_of_vertex = 10
+    number_of_vertex = 90
     saturation = 0.4
     test_graph = g.Graph(number_of_vertex, saturation)
     test_graph.generate()
@@ -207,3 +207,24 @@ def miles250Tabu():
     coloring2.tabuColoring(maxIterations=80, singleIterations=80, debug=True)
     coloring2.countColors()
     print(file_name, "Number of colors: ", coloring2.numberOfUsedColor)
+def test_graph() -> object:
+    test_graph = g.Graph()
+    file_name = "test_graph.txt"
+    test_graph.importFromFile(file_name=file_name)
+    print(test_graph.graph)
+    draw.plotGraph(test_graph.exportEdgesDict())
+    coloring1 = c.ColorGraph(test_graph)
+    coloring1.greedyColoring()
+    coloring1.countColors()
+    print(file_name, "Number of colors greedy: ", coloring1.numberOfUsedColor)
+    coloring2 = c.ColorGraph(test_graph)
+    coloring2.tabuColoring(maxIterations=80, singleIterations=80, debug=True)
+    coloring2.countColors()
+    print(file_name, "Number of colors: ", coloring2.numberOfUsedColor)
+def test_graphGreedy():
+    test_graph = g.Graph()
+    file_name = "test_graph.txt"
+    test_graph.importFromFile(file_name)
+    coloring = c.ColorGraph(test_graph)
+    coloring.greedyColoring(showSteps=False)
+    print(file_name, "Number of greedy colors: ", coloring.numberOfUsedColor)

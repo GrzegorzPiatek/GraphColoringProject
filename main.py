@@ -2,10 +2,10 @@ import unitaryTests as test
 
 
 def main():
-    # test.graphGenerator()
+     #test.graphGenerator()
     # test.graphImporting()
-    # test.plotting()
-    # test.coloring()
+     #test.plotting()
+     #test.coloring()
     # test.graphQueenGreedy()
     # test.graphGC100Greedy()
     # test.graphMilesGreedy()
@@ -14,14 +14,14 @@ def main():
     # test.greedyImproved()
 
     # test.machowiakGreedy()
-    # test.gc500Tabu()
+     #test.gc500Tabu()
     # test.gc1000Tabu()
     # test.queenTabu()
     # test.miles250Tabu()
     # test.le450Tabu()
     # test.testTabu()
-    # test.test40Tabu()
-
+     test.test_graph()
+     test.test_graphGreedy()
 
 if __name__ == "__main__":
     main()
